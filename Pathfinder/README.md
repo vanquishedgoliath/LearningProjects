@@ -20,7 +20,7 @@ After completing this assignment, you should be able to:
 
 - A Git repo containing:
   - A Python file called `pathfinder.py` that when run, creates a file called `map.png`.
-  - One or more test files to test your program
+  - One or more test files to test your program (checkout https://docs.python.org/3/library/unittest.html)
   - A `Pipfile` with your dependencies listed in it
 
 ## Normal Mode
