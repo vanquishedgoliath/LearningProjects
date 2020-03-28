@@ -28,9 +28,9 @@ def NumberOfMatches():
     flag = False
     while flag == False:
         numMatches = input("Enter best out of ____ matches:")
-        numMatches, flag = ValidateInput(numMatches)
+        numMatches,flag = ValidateInput(numMatches)
 
-    #numMatches = int(numMatches)
+    numMatches = int(numMatches)
     if numMatches > 10 or numMatches <= 0:
         print(numMatches, "\n")
         print("Please enter a number less than 10")
@@ -94,13 +94,14 @@ def DrawBoard(boardSize):
 # takes integer input from user, that represents what column they will place a piece
 def UserInput():
 
-    column = input("Please enter column number to place piece:")
-    try:
-        column = int(column)
-        return column
-    except ValueError:
-        print("Invalid entry, please use a number")
-        return (UserInput())
+    flag = False
+
+    while flag == False:
+
+        column = input("Please enter column number to place piece:")
+        column, flag = ValidateInput(column)
+
+    return column
 
 
 # draws board to screen
