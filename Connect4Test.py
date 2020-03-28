@@ -37,13 +37,13 @@ class Connect4Test(u.TestCase):
 
     def test_UserInputInt(self):
 
-        user_input = 3
+        user_input = [3]
 
 
         with u.mock.patch('builtins.input', side_effect=user_input):
             program_input = c4.UserInput()
 
-        self.assertEqual(user_input, program_input)
+        self.assertEqual(user_input[0], program_input)
 
 
 
