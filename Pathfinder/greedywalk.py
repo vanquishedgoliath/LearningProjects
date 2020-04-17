@@ -33,6 +33,46 @@ def least_change_in_elevation(current_elevation, elevation_1, elevation_2, eleva
     return next_elevation_value
 
 
+def next_three_elevations(elevation_array, i, midpoint):
+
+    try:
+        elevation_1 = elevation_array[midpoint - 1][i + 1]
+    except IndexError:
+        elevation_1 = 0
+
+    try:
+        elevation_2 = elevation_array[midpoint][i + 1]
+    except IndexError:
+        elevation_2 = 0
+
+    try:
+        elevation_3 = elevation_array[midpoint + 1][i + 1]
+    except IndexError:
+        elevation_3 = 0
+
+    return elevation_1, elevation_2, elevation_3
+
+
+def next_position_in_array(elevation_array, i, midpoint, next_elevation, image):
+
+    try:
+        if next_elevation is True:
+            next_elevation = elevation_array[midpoint - 1][i + 1]
+            midpoint = midpoint - 1
+            draw_path(image, i, midpoint)
+        elif next_elevation is False:
+            next_elevation = elevation_array[midpoint][i + 1]
+            draw_path(image, i, midpoint)
+        else:
+            next_elevation = elevation_array[midpoint + 1][i + 1]
+            midpoint = midpoint + 1
+            draw_path(image, i, midpoint)
+    except IndexError:
+        return next_elevation, midpoint
+
+    return next_elevation, midpoint
+
+
 def draw_path(image, i, midpoint):
 
     image.putpixel((i, midpoint), (0, 180, 180))
@@ -45,44 +85,18 @@ def greedy_walk(elevation_array):
     current_elevation = elevation_array[0][0]
     image = Image.open('map.png')
     # take away the minus 1 otherwise the last pixel won't be drawn to
-    for midpoint in range(len(elevation_array) - 1):
-
+    for midpoint in range(len(elevation_array)):
+        if midpoint == 599:
+            break
         for i in range(len(elevation_array)):
             # try statements stop index errors from occurring when checking for elevations outside of the image
-            try:
-                elevation_1 = elevation_array[i+1][midpoint-1]
-            except IndexError:
-                elevation_1 = 0
-
-            try:
-                elevation_2 = elevation_array[i+1][midpoint]
-            except IndexError:
-                elevation_2 = 0
-
-            try:
-                elevation_3 = elevation_array[i+1][midpoint+1]
-            except IndexError:
-                elevation_3 = 0
-
+            elevation_1, elevation_2, elevation_3 = next_three_elevations(elevation_array, i, midpoint)
             # this calculates the next elevation lowest changed elevation, and returns a flag to determine next elevation index
             next_elevation = least_change_in_elevation(current_elevation, elevation_1, elevation_2, elevation_3)
             # if statement determines the next elevation in the array to check and updates the "midpoint"
-            try:
-                if next_elevation is True:
-                    next_elevation = elevation_array[i+1][midpoint - 1]
-                    midpoint = midpoint - 1
-                    draw_path(image, i, midpoint)
-                elif next_elevation is False:
-                    next_elevation = elevation_array[i+1][midpoint]
-                    draw_path(image, i, midpoint)
-                else:
-                    next_elevation = elevation_array[i+1][midpoint + 1]
-                    midpoint = midpoint + 1
-                    draw_path(image, i, midpoint)
-            except IndexError:
-                asdfjk = 0
+            next_elevation, midpoint = next_position_in_array(elevation_array, i, midpoint, next_elevation, image)
             # this updates the loop so you'll keep checking the next pixel
             current_elevation = next_elevation
     # this statement was originally inside the for loop and it was real fun watching the computer open and save a png 600 times
     image.save('map.png')
-    return
+    return image
